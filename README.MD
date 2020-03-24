@@ -1,4 +1,4 @@
-# ![Mask Finder](assets/images/logo/transparent.png)
+# <a href="https://maskfinder.com" align="center"><img src="assets/images/logo/transparent.png" align="center" alt="Mask Finder"></a>
 
 **[View Demo](https://maskfinder.com)**
 
