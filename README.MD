@@ -1,4 +1,4 @@
-# <a href="https://maskfinder.com" align="center"><img src="assets/images/logo/transparent.png" align="center" alt="Mask Finder"></a>
+<p align="center"><a href="https://maskfinder.com" align="center"><img src="assets/images/logo/transparent.png" align="center" alt="Mask Finder"></a></p>
 
 **[View Demo](https://maskfinder.com)**
 
