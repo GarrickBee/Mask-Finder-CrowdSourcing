@@ -1,0 +1,2 @@
+item_type[]= 2 ply surgical mask ,3 ply surgical mask, 4 ply surgical masl,N95, N95 with valve, full face mask
+currency[] = RM,SGD,USD
