@@ -29,7 +29,7 @@ The UI Design is using [Tabler](https://tabler.io)
 - [icons8](https://icons8.com/icons/set/regular)
 
 ## Screenshots
-![Mask Finder Screen Shot](assets\images\screenshot\main_page.png)
+![Mask Finder Screen Shot](assets/images/screenshot/main_page.png)
 
 ## Code Structure
 The project is built using MVC (Model View Controller) Structure.
