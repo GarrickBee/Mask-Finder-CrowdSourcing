@@ -104,6 +104,7 @@ class Mask_model extends CI_Model
 			'location'  => $this->input->post('data[location]'),
 			'longitude' => $this->input->post('data[longitude]'),
 			'latitude'  => $this->input->post('data[latitude]'),
+			'country'   => $this->input->post('data[country]'),
 			'ip'        => $this->input->ip_address(),
 		);
 

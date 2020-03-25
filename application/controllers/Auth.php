@@ -47,6 +47,7 @@ class Auth extends CI_Controller
       );
       exit (json_encode($this->return));
     }
+
     // Merge Data with User Table Key
     $user_data = array(
       'google_id'     => $payload['sub'],
@@ -126,34 +127,38 @@ class Auth extends CI_Controller
 
   public function facebook_login()
   {
+    $user_model = BEERO::load_model('user');
+    $access_token = $this->input->post('facebook_token');
+
     $fb = new Facebook\Facebook([
       'app_id' => FACBEOOK_APP_ID,
       'app_secret' => FACBEOOK_APP_SECRET,
-      'default_graph_version' => 'v2.2',
+      'default_graph_version' => 'v3.2',
     ]);
 
-    $helper = $fb->getJavaScriptHelper();
-
-    try {
-      $accessToken = $helper->getAccessToken();
-    } catch(Facebook\Exceptions\FacebookResponseException $e) {
-      // When Graph returns an error
-      echo 'Graph returned an error: ' . $e->getMessage();
-      exit;
-    } catch(Facebook\Exceptions\FacebookSDKException $e) {
-      // When validation fails or other local issues
-      echo 'Facebook SDK returned an error: ' . $e->getMessage();
-      exit;
+    if (empty($access_token))
+    {
+      $helper = $fb->getJavaScriptHelper();
+      try {
+        $access_token = $helper->getAccessToken();
+      } catch(Facebook\Exceptions\FacebookResponseException $e) {
+        // When Graph returns an error
+        echo 'Graph returned an error: ' . $e->getMessage();
+        exit;
+      } catch(Facebook\Exceptions\FacebookSDKException $e) {
+        // When validation fails or other local issues
+        echo 'Facebook SDK returned an error: ' . $e->getMessage();
+        exit;
+      }
+      if (! isset($access_token)) {
+        echo 'No cookie set or no OAuth data could be obtained from cookie.';
+        exit;
+      }
     }
-    if (! isset($accessToken)) {
-      echo 'No cookie set or no OAuth data could be obtained from cookie.';
-      exit;
-    }
-
     // Get User Profile
     try {
       // Returns a `Facebook\FacebookResponse` object
-      $response = $fb->get('/me', $accessToken);
+      $response = $fb->get('/me?fields=id,first_name,last_name,email,link,gender,picture', $access_token);
     } catch(Facebook\Exceptions\FacebookResponseException $e) {
       echo 'Graph returned an error: ' . $e->getMessage();
       exit;
@@ -161,42 +166,64 @@ class Auth extends CI_Controller
       echo 'Facebook SDK returned an error: ' . $e->getMessage();
       exit;
     }
+
     $facebook_user = $response->getGraphUser();
-    // CHECK USER
-    // $user_data = array(
-    //   'google_id'     => $facebook_user['id'],
-    //   'first_name'    => $facebook_user['first_name'],
-    //   'last_name'     => $facebook_user['last_name'],
-    //   'profile_image' => $facebook_user['picture']['url'],
-    //   'email'         => $facebook_user['email'],
-    //   'full_name'     => $facebook_user['name'],
-    // );
-    $user = $response->getGraphUser();
-    print_r($user);
+    $first_name    = !empty($facebook_user['first_name'])?$facebook_user['first_name']:'';
+    $last_name     = !empty($facebook_user['last_name'])?$facebook_user['last_name']:'';
+    // Merge Data with User Table Key
+    $user_data = array(
+      'facebook_id'   => !empty($facebook_user['id'])?$facebook_user['id']:'',
+      'first_name'    => $first_name,
+      'last_name'     => $last_name ,
+      'profile_image' => !empty($facebook_user['picture']['url'])?$facebook_user['picture']['url']:'',
+      'email'         => !empty($facebook_user->getProperty("email"))?$facebook_user->getProperty("email"):'',
+      'full_name'     => $first_name." ".$last_name,
+    );
+
+    // Check User Exist
+    $maskfinder_user = $user_model->get_user_by_email($user_data['email']);
+    if (!empty($maskfinder_user))
+    {
+      // Check Google ID
+      if ($maskfinder_user['facebook_id'] !== $user_data['facebook_id'])
+      {
+        $update_user_data = array();
+        // Update User
+        foreach ($maskfinder_user as $maskfinder_user_key => $maskfinder_user_value)
+        {
+          if (empty($value))
+          {
+            $update_user_data[$maskfinder_user_key] = empty($user_data[$key])?'':$user_data[$key];
+            $maskfinder_user[$maskfinder_user_key]  = $update_user_data[$maskfinder_user_key];
+          }
+        }
+        $user_model->update_user($update_user_data);
+      }
+    }
+    else
+    {
+      // Create User
+      $user_id = $user_model->create_user($user_data);
+      if (!$user_id)
+      {
+        $this->return = array(
+          'success' => false,
+          'title' => "User Sign Up Failed",
+          'message' => "User Sign Up Failed.",
+        );
+        exit (json_encode($this->return));
+      }
+      $maskfinder_user       = $user_data;
+      $maskfinder_user['id'] = $user_id;
+    }
+    // Create Login Session
+    $user_model->create_user_session($maskfinder_user,'facebook');
+    // Success Return
+    $this->return = array(
+      'success' => true,
+      'title'   => "User Login Successfully",
+      'message' => "You have just login with your facebook account.",
+    );
+    exit (json_encode($this->return));
   }
-
-
 }
-
-//Facebook\GraphNodes\GraphUser Object
-// (
-//     [items:protected] => Array
-//         (
-//             [id] => 3434530096563290
-//             [first_name] => Garrick
-//             [last_name] => Ng
-//             [picture] => Facebook\GraphNodes\GraphPicture Object
-//                 (
-//                     [items:protected] => Array
-//                         (
-//                             [height] => 50
-//                             [is_silhouette] =>
-//                             [url] => https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=3434530096563290&height=50&width=50&ext=1587624304&hash=AeQnkmd7V2eQ9zar
-//                             [width] => 50
-//                         )
-//
-//                 )
-//
-//         )
-//
-// )

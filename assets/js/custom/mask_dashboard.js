@@ -25,18 +25,19 @@ function mask_form_submit()
   var location_input = $("#google_location").val();
   const geo = new google.maps.Geocoder();
   // Loading Button
-  $('#mask_form_submit').html('<span class="spinner-border spinner-border-sm align-middle" role="status" aria-hidden="true" ></span>  Submitting... ');
+  $('#mask_form_submit').html('<span class="spinner-border spinner-border-sm align-middle mr-1" role="status" aria-hidden="true" ></span>  Submitting... ');
   // Disable Submit Button
   $('button[type=submit], input[type=submit]').prop('disabled',true);
   geo.geocode({"address" : location_input }, function(result, status)
   {
     if (status == google.maps.GeocoderStatus.OK)
     {
-      var lat = result[0].geometry.location.lat();
-      var lng = result[0].geometry.location.lng();
+      var lat     = result[0].geometry.location.lat();
+      var lng     = result[0].geometry.location.lng();
+      var country = get_google_country(result[0].address_components);
       if (isNaN(lat) || isNaN(lng))
       {
-        // Enable Submit BUtton
+        // Disable Submit BUtton
         $('button[type=submit], input[type=submit]').prop('disabled',false);
         beero_alert('Error Submiting Form',"Something's gone wrong. Try entering a different location.",'danger','10000');
         return;
@@ -44,6 +45,7 @@ function mask_form_submit()
       // Input Location
       $("#location_longitude").val(lng);
       $("#location_latitude").val(lat);
+      $("#location_country").val(country);
       var form_values = mask_form.serialize();
       // Check Login
       var user_login_status = check_user_login();
@@ -84,6 +86,20 @@ function mask_form_submit()
       return false;
     }
   });
+}
+
+function get_google_country(address_component) {
+  for (var i = 0; i < address_component.length; i++) {
+    if (address_component[i].types[0] == "country") {
+      return address_component[i].long_name;
+    }
+    if (address_component[i].types.length == 2) {
+      if (address_component[i].types[0] == "political") {
+        return address_component[i].long_name;
+      }
+    }
+  }
+  return false;
 }
 
 /**

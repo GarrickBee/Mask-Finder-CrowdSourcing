@@ -50,10 +50,6 @@ if (!function_exists('date_difference'))
   }
 }
 
-/**
- * Check User Login
- * @return Boolean
- */
 if (!function_exists('check_user_login'))
 {
   function check_user_login()

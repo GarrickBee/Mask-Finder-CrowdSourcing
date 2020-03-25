@@ -23,6 +23,7 @@ The UI Design is using [Tabler](https://tabler.io)
 **Extra**  
 
 - [Boostrap Notify](http://bootstrap-notify.remabledesigns.com/)
+- Animate CSS
 
 **Icon Used**
 - [Font Awesome 5](https://fontawesome.com/)

@@ -3,7 +3,7 @@
   <div class="container">
     <a href="." class="navbar-brand navbar-brand-autodark d-none-navbar-vertical">
       <img src="<?php echo image_url("assets/images/logo/horizontal_light.png") ?>" alt="Tabler" class="navbar-brand-logo navbar-brand-logo-large">
-      <img src="<?php echo image_url("assets/images/logo/logo-small.png") ?>" alt="Tabler" class="navbar-brand-logo navbar-brand-logo-small">
+      <img src="<?php echo image_url("assets/images/logo/logo_small.png") ?>" alt="Tabler" class="navbar-brand-logo navbar-brand-logo-small">
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -19,7 +19,7 @@
           </a>
         </li>
         <li class="nav-item active">
-          <a class="nav-link" href="<?php echo base_url() ?>/blog">
+          <a class="nav-link" href="#/">
             <span class="nav-link-icon">
               <img src="https://img.icons8.com/small/32/000000/sugar-cubes.png"/>
             </span>

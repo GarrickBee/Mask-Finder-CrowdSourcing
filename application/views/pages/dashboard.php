@@ -14,6 +14,7 @@
         <form id="mask_form" method="POST" action="<?php echo base_url('api/mask_submit') ?>" >
           <input id="location_longitude" type="hidden" name="data[longitude]" value="">
           <input id="location_latitude" type="hidden" name="data[latitude]" value="">
+          <input id="location_country" type="hidden" name="data[country]" value="">
           <div class="row">
             <!-- Shop -->
             <div class="form-group col-12 mb-3">

@@ -34,7 +34,6 @@ function user_logout()
 //----- Google Auth
 function google_login(googleUser)
 {
-  alert("google login");
   // Useful data for your client-side scripts:
   var profile = googleUser.getBasicProfile();
   // User Token
@@ -51,13 +50,15 @@ function google_login(googleUser)
       var response = jQuery.parseJSON(data);
       if (response.success)
       {
+        // Disconnect user from google
+        gapi.auth2.getAuthInstance().disconnect();
         // Check is in the middle of form submitting
         if (mask_form_processing)
         {
           return mask_form_submit();
         }
-        return true;
-        // return location.href = base_url;
+        return location.href = base_url;
+        // return true;
       }
       else
       {
@@ -95,25 +96,74 @@ function google_logout()
 }
 
 // -------- Facebook Auth
-function login_with_facebook ()
+function login_with_facebook()
 {
-  FB.login(function(response) {
-    if (response.authResponse) {
-      // Post User Data
-      $.post(base_url+"auth/facebook_login").done(
-        function (data)
+  FB.getLoginStatus(function(response)
+  {
+    // User is logined
+    if (response.status === 'connected')
+    {
+      var uid = response.authResponse.userID;
+      var accessToken = response.authResponse.accessToken;
+      // Check Facebook Access Token
+      $.post(base_url+"auth/facebook_login",
+      {
+        oauth_provider: 'facebook',
+        facebook_token: accessToken,
+      }).done(function (data)
+      {
+        var response = jQuery.parseJSON(data);
+        if (response.success)
         {
-          console.log(data);
-          return;
+          // Check is in the middle of form submitting
+          if (mask_form_processing)
+          {
+            return mask_form_submit();
+          }
+          return location.href = base_url;
         }
-      );
-
-    } else {
-      alert('User cancelled login or did not fully authorize.');
+        else
+        {
+          return false;
+        }
+        return;
+      });
+    }
+    else
+    {
+      // Prompt Facebook Login
+      FB.login(function(response)
+      {
+        if (response.authResponse) {
+          $.post(base_url+"auth/facebook_login",).done(
+            function (data)
+            {
+              var response = jQuery.parseJSON(data);
+              if (response.success)
+              {
+                // Check is in the middle of form submitting
+                if (mask_form_processing)
+                {
+                  return mask_form_submit();
+                }
+                return location.href = base_url;
+                // return true;
+              }
+              else
+              {
+                return false;
+              }
+              return;
+            }
+          );
+        }
+        else {
+          alert('User cancelled login or did not fully authorize.');
+        }
+      },{scope: 'public_profile,email,gender,picture'});
     }
   });
-  return false;
-};
+}
 
 // General ALert
 function beero_alert(title='Information',message='No message',type='success',delay='5000')
