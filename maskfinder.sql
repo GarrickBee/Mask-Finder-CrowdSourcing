@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 25, 2020 at 12:47 AM
+-- Generation Time: Mar 25, 2020 at 02:15 PM
 -- Server version: 5.7.29
 -- PHP Version: 7.3.6
 
@@ -40,6 +40,7 @@ CREATE TABLE `mask` (
   `location` varchar(256) DEFAULT NULL,
   `longitude` varchar(256) DEFAULT NULL,
   `latitude` varchar(256) DEFAULT NULL,
+  `country` varchar(256) DEFAULT NULL,
   `remark` varchar(256) DEFAULT NULL,
   `ip` varchar(256) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
