@@ -34,21 +34,7 @@ class BEERO
     // RETURN AND GENERATE PAGE
     return $main_html;
   }
-
-  // SECURITY
-  public static function security()
-  {
-    if (empty($_SESSION['flytor_user']))
-    {
-      $system_message[] = BEERO::prepare_message('Access Denied','Kindly login with your email and password','Danger');
-      BEERO::system_alert ($system_message);
-      return redirect('login');
-      exit();
-    }
-    // USER DATA VARIABLE
-    return $_SESSION['flytor_user'];
-  }
-
+  
   // SYSTEM MESSAGE FUNCTION
   // PREPARE MESSAGE
   public static function prepare_message($system_alert_title='',$system_alert_message='',$system_alert_state='',$system_alert_delay='')
