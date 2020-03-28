@@ -238,3 +238,27 @@ function beero_alert(title='Information',message='No message',type='success',del
     '</div>',
   });
 }
+
+function isJson(str) {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
+function animate_number(target='',min='0',max='0')
+{
+  $({ countNum:min }).animate({ countNum: max }, {
+    duration: 2000,
+    easing: 'linear',
+    step: function () {
+      $(target).html(numberWithCommas( Math.ceil(this.countNum)) );
+    }
+  });
+}
+
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

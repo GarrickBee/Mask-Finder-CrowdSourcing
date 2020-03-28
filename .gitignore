@@ -1,6 +1,8 @@
 .DS_Store
 .ftpconfig
 
+requirement.txt
+
 application/config/constants.php
 application/cache/*
 !application/cache/index.html

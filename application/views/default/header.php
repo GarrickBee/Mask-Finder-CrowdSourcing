@@ -26,6 +26,14 @@
             <span class="nav-link-title">Blog</span>
           </a>
         </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="<?php echo base_url("live") ?>">
+            <span class="nav-link-icon">
+              <img src="https://img.icons8.com/ios-filled/50/000000/roman-soldier.png"/>
+            </span>
+            <span class="nav-link-title">Live</span>
+          </a>
+        </li>
       </ul>
       <ul class="navbar-nav mr-0 ml-auto">
         <li class="navbar-nav dropdown pl-3">

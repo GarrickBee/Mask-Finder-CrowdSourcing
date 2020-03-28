@@ -40,3 +40,4 @@ if (!empty($_SESSION['system_alert']))
 <script>
 document.body.style.display = "block"
 </script>
+<script type="text/javascript">
